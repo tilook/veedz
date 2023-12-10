@@ -1,0 +1,42 @@
+<!-- watch.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/styles.css">
+    <link rel = "icon" href="https://zupimages.net/up/23/49/dt01.png"
+	type = "image/x-icon">
+    <title>Watch Video</title>
+    <style>
+        body{
+            background-color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div id="logoContainer" onclick="redirectToHomePage()">
+            <h1>Veedz</h1>
+          </div>
+        <button id="uploadButton">Upload</button>
+        <button id="goToWatchPage">Home</button>
+    </header>
+    <div id = "Watch_VideoContainer">
+        
+    <video id="videoPlayer" controls="false" width="50%" height="50%">
+        <!-- La source de la vidéo peut être définie ici -->
+        Votre navigateur ne prend pas en charge la balise vidéo.
+    </video>
+    
+    
+</div>
+</div>
+    <h1 id="videoTitle">{Video Title}</h1>
+    
+
+    <script src="/public/js/watch.js"></script>
+</body>
+</html>

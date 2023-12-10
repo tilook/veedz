@@ -1,0 +1,259 @@
+ajouter une colonne à DB via server :
+db.get(`
+  PRAGMA table_info(videos)
+`, (err, row) => {
+  if (err) {
+    console.error('Erreur lors de la vérification de l\'existence de la colonne orientation:', err);
+  } else {
+    if (!row || !row.orientation) {
+      // Ajouter la colonne orientation si elle n'existe pas déjà
+      db.run(`
+        ALTER TABLE videos
+        ADD COLUMN orientation TEXT;
+      `, (err) => {
+        if (err) {
+          console.error('Erreur lors de l\'ajout de la colonne orientation:', err);
+        } else {
+          console.log('Colonne orientation ajoutée avec succès.');
+        }
+      });
+    }
+  }
+});
+
+
+
+
+
+const VeedzDiv = document.getElementById('logoContainer');
+document.addEventListener('DOMContentLoaded', () => {
+    const uploadButton = document.getElementById('uploadButton');
+    const videoList = document.getElementById('videoList');
+
+    uploadButton.addEventListener('click', () => {
+      window.location.href = '/upload';
+    });
+    function loadVideoList() {
+        const videoListContainer = document.getElementById('videoList');
+    
+        // Efface le contenu actuel de la liste des vidéos
+        videoListContainer.innerHTML = '';
+    
+        // Effectue une requête pour obtenir la liste des vidéos
+        fetch('http://localhost:3000/videos')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const videos = data.videos;
+    
+                    // Crée un conteneur principal pour toutes les rangées
+                    const allVideoGrids = document.createElement('div');
+                    allVideoGrids.classList.add('all-video-grids');
+    
+                    let currentVideoGrid;
+    
+                    for (let i = 0; i < videos.length; i++) {
+                        // Crée un conteneur pour chaque groupe de trois vidéos
+                        if (i % 3 === 0) {
+                            currentVideoGrid = document.createElement('div');
+                            currentVideoGrid.classList.add('video-grid');
+                            allVideoGrids.appendChild(currentVideoGrid);
+                        }
+    
+                        const video = videos[i];
+    
+                        // Crée un conteneur pour chaque vidéo et titre
+                        const videoContainer = document.createElement('div');
+                        videoContainer.classList.add('video-container');
+    
+                        // Crée une image
+                        const videoImage = document.createElement('img');
+                        const imageUrlWithExtension = video.imageUrl + '.png';
+                        videoImage.src = imageUrlWithExtension;
+                        videoImage.alt = video.title;
+                        videoContainer.appendChild(videoImage);
+    
+                        // Ajoute le titre en dessous de l'image
+                        const titleText = document.createElement('div');
+                        titleText.textContent = video.title;
+                        videoContainer.appendChild(titleText);
+    
+                        // Ajoute un gestionnaire d'événements pour le clic
+                        videoContainer.addEventListener('click', () => redirectToWatchPage(video.id));
+    
+                        // Ajoute l'élément de liste au conteneur
+                        currentVideoGrid.appendChild(videoContainer);
+                    }
+    
+                    // Ajoute le conteneur principal à la liste principale
+                    videoListContainer.appendChild(allVideoGrids);
+                } else {
+                    console.error('Erreur lors de la récupération des vidéos depuis le serveur.');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la requête fetch:', error);
+            });
+            
+
+  function loadVerticalVideos() {
+    const verticalVideoListContainer = document.getElementById('verticalVideoList');
+
+    // Efface le contenu actuel de la liste des vidéos verticales
+    verticalVideoListContainer.innerHTML = '';
+
+    // Effectuez une requête pour obtenir la liste des vidéos verticales
+    fetch('http://localhost:3000/verticalVideos')
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const verticalVideos = data.verticalVideos;
+
+          // Crée un conteneur pour les vidéos verticales
+          const verticalVideoGrid = document.createElement('div');
+          verticalVideoGrid.classList.add('vertical-video-grid');
+
+          for (const video of verticalVideos) {
+            // Crée un conteneur pour chaque vidéo et titre
+            const videoContainer = document.createElement('div');
+            videoContainer.classList.add('video-container');
+
+            // Crée une image
+            const videoImage = document.createElement('img');
+            videoImage.src = video.imageUrl;
+            videoImage.alt = video.title;
+            videoContainer.appendChild(videoImage);
+
+            // Ajoute le titre en dessous de l'image
+            const titleText = document.createElement('div');
+            titleText.textContent = video.title;
+            videoContainer.appendChild(titleText);
+
+            // Ajoute l'élément de liste au conteneur
+            verticalVideoGrid.appendChild(videoContainer);
+          }
+
+          // Ajoute le conteneur des vidéos verticales à la section correspondante
+          verticalVideoListContainer.appendChild(verticalVideoGrid);
+        } else {
+          console.error('Erreur lors de la récupération des vidéos verticales depuis le serveur.');
+        }
+      })
+      .catch(error => {
+        console.error('Erreur lors de la requête fetch pour les vidéos verticales:', error);
+      });
+  
+  function redirectToWatchPage(videoId) {
+    // Utilisez la méthode pushState pour changer l'URL sans recharger la page
+    history.pushState(null, null, `watch?id=${videoId}`);
+    // Appelez la fonction qui met à jour le contenu de la page
+    loadWatchPageContent(videoId);
+  }
+  
+  // Fonction pour charger le contenu de la page de lecture
+
+  
+  function showWatchPage() {
+    // Assurez-vous que la page de lecture est visible, par exemple, en affichant ou en masquant les éléments nécessaires
+    const watchPageElement = document.getElementById('watchPage');
+    watchPageElement.style.display = 'block';
+  }
+  
+  // Écoutez l'événement popstate pour détecter les changements d'URL
+  window.addEventListener('popstate', () => {
+    // Chargez le contenu en fonction de l'URL actuelle
+    loadContentBasedOnUrl();
+  });
+  
+  // Chargez le contenu en fonction de l'URL actuelle lors du chargement initial
+  loadContentBasedOnUrl();
+  
+  function loadContentBasedOnUrl() {
+    // Récupérez l'URL actuelle et extrayez les informations nécessaires
+    const currentUrl = window.location.href;
+    const urlParams = new URLSearchParams(currentUrl);
+  
+    // Vérifiez s'il y a un ID de vidéo dans les paramètres de l'URL
+    if (urlParams.has('id')) {
+      const videoId = urlParams.get('id');
+      // Chargez le contenu de la page de lecture en fonction de l'ID de la vidéo
+      loadWatchPageContent(videoId);
+    } else {
+      // Chargez le contenu par défaut, par exemple, la liste principale des vidéos
+      loadVideoList();
+      loadVerticalVideos();
+    }
+    
+  }
+  
+
+    }}
+
+// Fonction pour rediriger vers la page de lecture
+function redirectToWatchPage(videoId) {
+    // Utilise la méthode pushState pour changer l'URL sans recharger la page
+    window.location.href = `/watch?id=${videoId}`;
+    // Charge le contenu de la page de lecture
+    //loadContentBasedOnUrl();
+}
+
+// Fonction pour charger le contenu en fonction de l'URL actuelle
+function loadContentBasedOnUrl() {
+    // Récupère l'identifiant de la vidéo à partir de l'URL
+    const videoId = getVideoIdFromUrl();
+    // Charge le contenu en fonction de l'identifiant de la vidéo
+    if (videoId) {
+        loadWatchPageContent(videoId);
+    } else {
+        // Si aucun identifiant de vidéo n'est présent, charge la liste des vidéos
+        loadVideoList();
+    }
+}
+
+// Fonction pour récupérer l'identifiant de la vidéo à partir de l'URL
+function getVideoIdFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('id');
+}
+
+// Fonction pour charger le contenu de la page de lecture
+function loadWatchPageContent(videoId) {
+    // Effectue une requête pour obtenir les informations de la vidéo spécifiée par videoId
+    fetch(`http://localhost:3000/videos/${videoId}`)
+        .then(response => response.json())
+        .then(videoData => {
+            if (videoData.success) {
+                // Met à jour le contenu de la page de lecture avec les informations de la vidéo
+                const videoTitleElement = document.getElementById('videoTitle');
+                const videoPlayerElement = document.getElementById('videoPlayer');
+
+                videoTitleElement.textContent = videoData.video.title;
+
+                // Assure que le lecteur vidéo prend en charge le chemin de la vidéo
+                // et que la balise <video> existe sur votre page watch.html
+                videoPlayerElement.src = videoData.video.path;
+
+                // Ajoute d'autres éléments ou mises à jour de contenu selon vos besoins
+
+                // Affiche la page de lecture
+                showWatchPage();
+            } else {
+                console.error('Erreur lors de la récupération des informations de la vidéo depuis le serveur.');
+                // Ajoutez du code pour gérer le cas d'erreur, par exemple, rediriger vers la liste principale des vidéos.
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la requête fetch pour les informations de la vidéo:', error);
+            // Ajoutez du code pour gérer le cas d'erreur, par exemple, rediriger vers la liste principale des vidéos.
+        });
+}})
+
+// Fonction pour afficher la page de lecture
+function showWatchPage() {
+    // Assure que la page de lecture est visible, par exemple, en affichant ou en masquant les éléments nécessaires
+    const watchPageElement = document.getElementById('watchPage');
+    watchPageElement.style.display = 'block';
+}
+VeedzDiv.addEventListener('click', () => {
+    window.location.href = 'index';
+});

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/styles.css">
+    <link rel = "icon" href="https://zupimages.net/up/23/49/dt01.png"
+	type = "image/x-icon">
+    <title>Veedz - Watch Videos</title>
+</head>
+<body>
+    <header>
+        <div id="logoContainer" onclick="redirectToHomePage()">
+            <h1>Veedz</h1>
+          </div>
+        <button id="uploadButton">Upload</button>
+        <button id="accountButton">Account</button>
+    </header>
+    
+    <main>
+            <section id="videos">
+                <h2 class="IndexCategoriesText">Watch Videos</h2>
+                <div class="video-grid" id="videoList"></div>
+                </section>
+               <section id="VerticalVideos">
+                <h2 class = "IndexCategoriesText">Vertical Videos</h2>
+                <div class="vertical-video-grid" id="verticalVideoList"></div>
+            </section>
+        </section>
+    </main>
+
+    <script src="/public/js/index.js"></script>
+</body>
+</html>

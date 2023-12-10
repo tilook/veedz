@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/styles.css">
+    <link rel="icon" href="https://localhost:3000/Images/Veedz.png" type="image/x-icon">
+	
+    <!--<link rel = "icon" href="https://zupimages.net/up/23/49/dt01.png" type="image/x-icon">-->
+    <title>Veedz - Upload Video</title>
+</head>
+<body>
+    <header>
+        <div id="logoContainer" onclick="redirectToHomePage()">
+            <h1>Veedz</h1>
+          </div>    
+        <button id="goToWatchPage">Home</button>
+    </header>
+    
+    <main>
+        <section id="upload">
+            <h2>Upload Video</h2>
+            <!-- upload.html -->
+            <form id="uploadForm">
+                <label for="videoTitle">Title:</label>
+                <input type="text" id="uploadInputVideoTitle" name="videoTitle" required>
+            
+                <label for="videoFile">Video File:</label>
+                <input type="file" id="uploadInputVideoFile" name="videoFile" accept="video/*" required>
+                <button type="submit" id="uploadButton">Upload</button>
+            </form>
+  
+        </section>
+    </main>
+
+    <script src="/public/js/upload.js"></script>
+</body>
+</html>
